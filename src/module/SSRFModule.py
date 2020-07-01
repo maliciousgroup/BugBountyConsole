@@ -65,8 +65,6 @@ injectable_headers: list = [
     "X-Remote-Addr"
 ]
 
-listening_host: str = ""
-
 
 class SSRFModule(BaseModule):
 
