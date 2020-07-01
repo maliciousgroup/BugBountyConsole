@@ -190,7 +190,13 @@ class SSRFModule(BaseModule):
             await self.print_queue.put(('warning', f"[x] User Aborting SSRF attack on the target domain '{domain}'.\n"))
             return
 
+        await self.print_queue.put('')
+        await self.print_queue.put(('bold', f"[*] Starting SSRF Header Injection attack on {len(urls)} URLs"))
+        await asyncio.sleep(0.25)
         await self.header_injection(urls, listener, workers)
+        await self.print_queue.put('')
+        await self.print_queue.put(('bold', f"[*] Starting SSRF Parameter Injection attack on {len(param_urls)} URLs"))
+        await asyncio.sleep(0.25)
         await self.param_injection(param_urls, listener, workers)
 
     async def header_injection(self, urls: list, listener: str, workers: int):
