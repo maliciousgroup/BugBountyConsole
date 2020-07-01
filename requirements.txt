@@ -1,0 +1,4 @@
+prompt-toolkit==3.0.5
+PTable==0.9.2
+requests==2.24.0
+ruamel.yaml==0.16.10
