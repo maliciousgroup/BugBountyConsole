@@ -185,6 +185,10 @@ class SSRFModule(BaseModule):
             f"[+] Collection process found {len(urls)} unique URL(s) with {len(param_urls)} individual parameters!.\n"))
         await asyncio.sleep(1)
 
+        if len(urls) == 0:
+            await self.print_queue.put(('warning', f"[x] No targets detected for the target domain '{domain}'.\n"))
+            return
+
         confirm: str = input(f"About to run SSRF attacks on {len(param_urls + urls)} URL(s).  Are you sure? [Y/n]: ")
         if confirm.startswith(tuple(['N', 'n'])):
             await self.print_queue.put(('warning', f"[x] User Aborting SSRF attack on the target domain '{domain}'.\n"))
