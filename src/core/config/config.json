@@ -1,0 +1,26 @@
+{
+  "provider": {
+    "way_back_machine": [
+      "true",
+      "Enable option to use 'Way Back Machine' CDX data to collect URLs for target domain",
+      "true, false"
+    ],
+    "alien_vault": [
+      "true",
+      "Enable option to use 'AT&T Alien Vault' OTX data to collect URLs for target domain",
+      "true, false"
+    ],
+    "google_search": [
+      "false",
+      "Enable option to use Google Search data to collect URLs for target domain\n",
+      "false"
+    ]
+  },
+  "console": {
+    "prompt_text": [
+      "BugBountyConsole",
+      "The prompt text in string format",
+      ""
+    ]
+  }
+}
