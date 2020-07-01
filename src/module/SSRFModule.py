@@ -98,11 +98,6 @@ class SSRFModule(BaseModule):
                 'The amount of workers to run in parallel',
                 ''
             ],
-            'retries': [
-                '3',
-                'The number of retries allotted to each web request',
-                ''
-            ],
             'custom_urls': [
                 'custom_urls.txt',
                 'A custom URL(s) file containing URL targets',
