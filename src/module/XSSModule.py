@@ -207,12 +207,13 @@ class XSSModule(BaseModule):
             return
 
     def fetch_url(self, work_queue: asyncio.Queue):
+        gecko_driver = self.option_register.get_register('gecko_driver')
         while work_queue.empty() is not True:
             url: str = work_queue.get_nowait()
             url = url.replace("alert(1)", f"alert({self.random_int})")
             opts = Options()
             opts.headless = True
-            driver = webdriver.Firefox(options=opts, executable_path="C:\\Users\\d3d\\Development\\geckodriver.exe")
+            driver = webdriver.Firefox(options=opts, executable_path=gecko_driver)
             try:
                 driver.get(url)
                 WebDriverWait(driver, 5).until(ec.alert_is_present())
