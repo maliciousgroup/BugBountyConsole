@@ -1,12 +1,12 @@
 {
   "provider": {
     "way_back_machine": [
-      "true",
+      "false",
       "Enable option to use 'Way Back Machine' CDX data to collect URLs for target domain",
       "true, false"
     ],
     "alien_vault": [
-      "true",
+      "false",
       "Enable option to use 'AT&T Alien Vault' OTX data to collect URLs for target domain",
       "true, false"
     ]
@@ -15,6 +15,11 @@
     "prompt_text": [
       "BugBountyConsole",
       "The prompt text in string format",
+      ""
+    ],
+    "geckodriver": [
+      "C:\\Users\\d3d\\Development\\geckodriver.exe",
+      "The file location for the 'geckodriver.exe' used to manipulate FireFox instance",
       ""
     ]
   }
