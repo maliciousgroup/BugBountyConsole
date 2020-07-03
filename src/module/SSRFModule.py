@@ -3,6 +3,7 @@ import urllib.parse
 import asyncio
 import requests
 import random
+import base64
 import re
 
 from pathlib import Path
@@ -81,15 +82,20 @@ class SSRFModule(BaseModule):
                 'The target domain name to gather URLs for',
                 ''
             ],
+            'listener': [
+                'http://25478bae5b5a.ngrok.io',
+                'The IP or hostname of the listening service used to verify SSRF vulnerabilities',
+                ''
+            ],
             'sub-domains': [
                 'true',
                 'Enable this option to also include sub-domains for target domain',
                 'true,false'
             ],
-            'listener': [
-                '1370c2d89fd2.ngrok.io',
-                'The IP or hostname of the listening service used to verify SSRF vulnerabilities',
-                ''
+            'base64_encode': [
+                'true',
+                'Enable this option to base64 encode the SSRF payload',
+                'true,false'
             ],
             'workers': [
                 '20',
@@ -151,7 +157,8 @@ class SSRFModule(BaseModule):
 
     async def execute(self) -> None:
         domain: str = self.option_register.get_register('domain')
-        sub_domains = True if self.option_register.get_register('sub-domains') == 'true' else False
+        sub_domains: bool = True if self.option_register.get_register('sub-domains') == 'true' else False
+        base64_encode: bool = True if self.option_register.get_register('base64_encode') == 'true' else False
         listener: str = self.option_register.get_register('listener')
         workers: int = int(self.option_register.get_register('workers'))
         custom_urls: str = self.option_register.get_register('custom_urls')
@@ -161,6 +168,9 @@ class SSRFModule(BaseModule):
         if not all([domain, sub_domains, listener, workers]):
             await self.print_queue.put(('error', f"Missing SSRF required options.\n"))
             return
+
+        if base64_encode:
+            listener = base64.b64encode(listener)
 
         if custom_urls and Path(custom_urls).is_file():
             await self.print_queue.put(('success', f"[+] [{domain}] - Gathering Custom URL data"))
@@ -180,14 +190,14 @@ class SSRFModule(BaseModule):
                 continue
             param_urls += output
 
+        if len(urls) == 0:
+            await self.print_queue.put(('warning', f"[x] No targets detected for the target domain '{domain}'.\n"))
+            return
+
         await self.print_queue.put((
             'success',
             f"[+] Collection process found {len(urls)} unique URL(s) with {len(param_urls)} individual parameters!.\n"))
         await asyncio.sleep(1)
-
-        if len(urls) == 0:
-            await self.print_queue.put(('warning', f"[x] No targets detected for the target domain '{domain}'.\n"))
-            return
 
         confirm: str = input(f"About to run SSRF attacks on {len(param_urls + urls)} URL(s).  Are you sure? [Y/n]: ")
         if confirm.startswith(tuple(['N', 'n'])):
