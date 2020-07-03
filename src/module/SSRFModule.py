@@ -170,7 +170,7 @@ class SSRFModule(BaseModule):
             return
 
         if base64_encode:
-            listener = base64.b64encode(listener)
+            listener = base64.b64encode(listener.encode()).decode()
 
         if custom_urls and Path(custom_urls).is_file():
             await self.print_queue.put(('success', f"[+] [{domain}] - Gathering Custom URL data"))
@@ -248,6 +248,7 @@ class SSRFModule(BaseModule):
     def fetch_url(self, work_queue: asyncio.Queue, headers, listener=None, placeholder=None):
         while work_queue.empty() is not True:
             url: str = work_queue.get_nowait()
+
             if placeholder and listener:
                 url = url.replace(placeholder, listener)
 
